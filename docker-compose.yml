@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # 1. Database: MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: tw-mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - tw-network
+
+  # 2. Backend: FastAPI
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: tw-fastapi
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    networks:
+      - tw-network
+
+  # 3. Frontend: Lighttpd
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: tw-lighttpd
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - tw-network
+
+networks:
+  tw-network:
+    driver: bridge

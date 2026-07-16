@@ -1,0 +1,16 @@
+# Use lightest Alpine linux
+FROM alpine:3.18
+
+# Install lighttpd
+RUN apk add --no-cache lighttpd
+
+# Copy index.html to lighttpd default folder
+COPY index.html /var/www/localhost/htdocs/index.html
+
+# Expose port 80
+EXPOSE 80
+
+# Run lighttpd
+# -D: foreground (container stay running)
+# -f: specific file configuration
+CMD ["lighttpd", "-D", "-f", "/etc/lighttpd/lighttpd.conf"]

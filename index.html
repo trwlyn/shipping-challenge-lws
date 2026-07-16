@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Challenge - Milestone 2</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background-color: #f4f4f9; }
+        .container { border: 2px solid #333; display: inline-block; padding: 20px; border-radius: 10px; background: white; }
+        h1 { color: #2c3e50; }
+        .info { font-size: 1.2em; margin: 10px 0; }
+        .highlight { font-weight: bold; color: #e74c3c; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Shipping Challenge 🚢</h1>
+    <div class="info">Nama dari DB: <span id="db-name" class="highlight">Loading...</span></div>
+    <div class="info">Container ID: <span id="container-id" class="highlight">Loading...</span></div>
+</div>
+
+<script>
+    // Fungsi untuk mengambil data dari API FastAPI
+    async function fetchData() {
+        try {
+            // Ganti localhost dengan IP/Host API kamu nanti
+            const nameRes = await fetch('http://localhost:8000/get-name');
+            const nameData = await nameRes.json();
+            document.getElementById('db-name').innerText = nameData.name;
+
+            const idRes = await fetch('http://localhost:8000/get-container-id');
+            const idData = await idRes.json();
+            document.getElementById('container-id').innerText = idData.container_id;
+        } catch (error) {
+            console.error('Gagal mengambil data:', error);
+            document.getElementById('db-name').innerText = "Error koneksi API";
+        }
+    }
+
+    // Jalankan fungsi saat halaman dimuat
+    fetchData();
+    // Refresh otomatis jika ada perubahan (sesuai permintaan soal)
+    setInterval(fetchData, 5000);
+</script>
+</body>
+</html>
