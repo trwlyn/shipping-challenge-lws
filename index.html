@@ -24,11 +24,11 @@
     async function fetchData() {
         try {
             // Ganti localhost dengan IP/Host API kamu nanti
-            const nameRes = await fetch('http://localhost:8000/get-name');
+            const nameRes = await fetch('/api/get-name');
             const nameData = await nameRes.json();
             document.getElementById('db-name').innerText = nameData.name;
 
-            const idRes = await fetch('http://localhost:8000/get-container-id');
+            const idRes = await fetch('/api/get-container-id');
             const idData = await idRes.json();
             document.getElementById('container-id').innerText = idData.container_id;
         } catch (error) {
