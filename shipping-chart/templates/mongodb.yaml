@@ -1,0 +1,12 @@
+# templates/mongodb.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb  # <--- PASTIKAN NAMANYA PERSIS SEPERTI INI
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
