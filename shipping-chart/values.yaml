@@ -1,9 +1,18 @@
-# values.yaml
+global:
+  initial: "tw" # Pastikan 'initial' ada di bawah 'global'
+
+mongodb:
+  image: mongo:latest
+  port: 27017
+
 backend:
-  replicaCount: 2  # Ini akan memberimu poin ekstra scaling!
-  image:
-    repository: tw-fastapi # Ganti dengan nama image kamu
-    tag: "latest"
-    pullPolicy: IfNotPresent
-  service:
-    port: 8000
+  replicaCount: 2
+  image: tw-fastapi
+  tag: latest
+  port: 8000
+
+frontend:
+  replicaCount: 1
+  image: tw-lighttpd
+  tag: latest
+  port: 80
