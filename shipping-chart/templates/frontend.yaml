@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Values.global.initial }}-frontend
 spec:
+  replicas: {{ .Values.frontend.replicaCount }}
   selector:
     matchLabels:
       app: frontend
@@ -14,15 +15,16 @@ spec:
       containers:
         - name: lighttpd
           image: {{ .Values.frontend.image }}:{{ .Values.frontend.tag }}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: {{ .Values.frontend.port }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: {{ .Values.global.initial }}-frontend-service
 spec:
-  type: NodePort # Agar bisa diakses dari browser luar
+  type: NodePort
   selector:
     app: frontend
   ports:
