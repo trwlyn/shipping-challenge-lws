@@ -7,12 +7,12 @@ mongodb:
 
 backend:
   replicaCount: 2
-  image: tw-fastapi
+  image: tw-project-lws-backend
   tag: latest
   port: 8000
 
 frontend:
   replicaCount: 1
-  image: tw-lighttpd
+  image: tw-project-lws-frontend
   tag: latest
   port: 80
