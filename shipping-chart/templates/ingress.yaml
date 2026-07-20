@@ -10,14 +10,14 @@ spec:
     - http:
         paths:
           - path: /?(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: tw-frontend-service
                 port:
                   number: 80
           - path: /api/(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: backend-service
