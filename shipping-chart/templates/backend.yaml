@@ -23,6 +23,18 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.global.initial }}-postgres-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
           imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1

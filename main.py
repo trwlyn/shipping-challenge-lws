@@ -44,3 +44,8 @@ async def get_container_id():
         return {"container_id": socket.gethostname()}
     except Exception as e:
         return {"container_id": f"Error: {str(e)}"}
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
