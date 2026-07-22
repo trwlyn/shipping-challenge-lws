@@ -27,14 +27,18 @@ spec:
             httpGet:
               path: /health
               port: {{ .Values.backend.port }}
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /health
               port: {{ .Values.backend.port }}
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
           imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1
