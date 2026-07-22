@@ -6,6 +6,7 @@ RUN apk add --no-cache lighttpd
 
 # Copy index.html to lighttpd default folder
 COPY index.html /var/www/localhost/htdocs/index.html
+COPY lighttpd.conf /etc/lighttpd/lighttpd.conf
 
 # Expose port 80
 EXPOSE 80
