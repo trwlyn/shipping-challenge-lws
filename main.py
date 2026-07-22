@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import socket
 import logging
+import os
 
 # Setup logging agar kita bisa lihat error di terminal
 logging.basicConfig(level=logging.INFO)
@@ -18,7 +19,15 @@ app.add_middleware(
 )
 
 # Gunakan alamat service 'mongodb' sesuai docker-compose
-MONGO_DETAILS = "mongodb://mongodb:27017"
+MONGO_USER = os.getenv("MONGO_INITDB_ROOT_USERNAME")
+MONGO_PASS = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
+
+if MONGO_USER and MONGO_PASS:
+    MONGO_DETAILS = f"mongodb://{MONGO_USER}:{MONGO_PASS}@mongodb:27017/?authSource=admin"
+else:
+    # fallback: tanpa auth (misal saat testing lokal tanpa auth diaktifkan)
+    MONGO_DETAILS = "mongodb://mongodb:27017"
+
 client = AsyncIOMotorClient(MONGO_DETAILS)
 database = client.shipping_db
 collection = database.names_collection

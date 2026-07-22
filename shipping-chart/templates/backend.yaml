@@ -17,6 +17,9 @@ spec:
           image: {{ .Values.backend.image }}:{{ .Values.backend.tag }}
           ports:
             - containerPort: {{ .Values.backend.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.global.initial }}-mongodb-secret
           imagePullPolicy: IfNotPresent
 ---
 apiVersion: v1

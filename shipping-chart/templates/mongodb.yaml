@@ -18,7 +18,10 @@ spec:
             - containerPort: 27017
           volumeMounts:
             - name: mongodb-data
-              mounthPath: /data/db
+              mountPath: /data/db
+          envFrom:
+            - secretRef:
+                name: {{ .Values.global.initial}}-mongodb-secret
       volumes:
         - name: mongodb-data
           persistentVolumeClaim:
