@@ -11,7 +11,7 @@
 <p>Container ID: <span id="container-id">Loading...</span></p>
 <script>
     // fetch user from API
-    fetch("http://localhost:8000/user")
+    fetch("http://localhost:30800/user")
         .then((res) => res.json())
         .then((data) => {
             const user = data.name;
@@ -19,7 +19,7 @@
         });
 
     // fetch container id from API
-    fetch("http://localhost:8000/container-id")
+    fetch("http://localhost:30800/container-id")
         .then((res) => res.json())
         .then((data) => {
             document.getElementById("container-id").innerText = data.container_id;
