@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.initial }}-postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: {{ .Values.postgres.image }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          envFrom:
+            - secretRef:
+                name: {{ .Values.global.initial }}-postgres-secret
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+            - name: postgres-initdb
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.global.initial }}-postgres-pvc
+        - name: postgres-initdb
+          configMap:
+            name: {{ .Values.global.initial }}-postgres-initdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.global.initial }}-postgres-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

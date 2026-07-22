@@ -1,13 +1,14 @@
 global:
   initial: "tw" # Pastikan 'initial' ada di bawah 'global'
 
-mongodb:
-  image: mongo:latest
-  port: 27017
+postgres:
+  image: postgres:16-alpine
+  port: 5432
   storageSize: 1Gi
+  db: shipping_db
   auth:
-    username: twadmin
-    password: ""   #isi saat deploy pakai --set
+    username: postgres
+    password: ""   # isi saat deploy pakai --set, jangan di sini   #isi saat deploy pakai --set
 
 backend:
   replicaCount: 2
