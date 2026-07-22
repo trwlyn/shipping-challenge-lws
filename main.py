@@ -1,11 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-import socket
-import logging
+import asyncpg
 import os
+import logging
 
-# Setup logging agar kita bisa lihat error di terminal
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
@@ -18,35 +16,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Gunakan alamat service 'mongodb' sesuai docker-compose
-MONGO_USER = os.getenv("MONGO_INITDB_ROOT_USERNAME")
-MONGO_PASS = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "")
+POSTGRES_DB = os.getenv("POSTGRES_DB", "shipping_db")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "postgres")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 
-if MONGO_USER and MONGO_PASS:
-    MONGO_DETAILS = f"mongodb://{MONGO_USER}:{MONGO_PASS}@mongodb:27017/?authSource=admin"
-else:
-    # fallback: tanpa auth (misal saat testing lokal tanpa auth diaktifkan)
-    MONGO_DETAILS = "mongodb://mongodb:27017"
+DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
-client = AsyncIOMotorClient(MONGO_DETAILS)
-database = client.shipping_db
-collection = database.names_collection
-
-@app.get("/get-name")
-async def get_name():
+@app.get("/user")
+async def get_user():
     try:
-        # Cek apakah database bisa diakses
-        document = await collection.find_one({}, {"_id": 0, "name": 1})
-        if document:
-            return {"name": document["name"]}
+        conn = await asyncpg.connect(DATABASE_URL)
+        row = await conn.fetchrow("SELECT name FROM users LIMIT 1")
+        await conn.close()
+        if row:
+            return {"name": row["name"]}
         return {"name": "Database Kosong (Isi dulu ya!)"}
     except Exception as e:
-        logging.error(f"Error di /get-name: {e}")
+        logging.error(f"Error di /user: {e}")
         return {"name": f"Error Koneksi DB: {str(e)}"}
-
-@app.get("/get-container-id")
-async def get_container_id():
-    try:
-        return {"container_id": socket.gethostname()}
-    except Exception as e:
-        return {"container_id": f"Error: {str(e)}"}

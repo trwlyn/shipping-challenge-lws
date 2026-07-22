@@ -1,36 +1,43 @@
-version: '3.8'
-
 services:
-  # 1. Database: MongoDB
-  mongodb:
-    image: mongo:latest
-    container_name: tw-mongodb
+  postgres:
+    image: postgres:16-alpine
+    container_name: tw-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shipping_db
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "27017:27017"
+      - "5432:5432"
     networks:
       - tw-network
 
-  # 2. Backend: FastAPI
   backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
     container_name: tw-fastapi
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shipping_db
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
     ports:
       - "8000:8000"
     depends_on:
-      - mongodb
+      - postgres
     networks:
       tw-network:
         aliases:
-            - tw-backend-service
+          - tw-backend-service
 
-  # 3. Frontend: Lighttpd
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    container_name: tw-lighttpd
+    container_name: tw-frontend
     ports:
       - "8080:80"
     depends_on:
