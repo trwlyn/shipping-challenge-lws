@@ -4,6 +4,7 @@ global:
 mongodb:
   image: mongo:latest
   port: 27017
+  storageSize: 1Gi
 
 backend:
   replicaCount: 2
