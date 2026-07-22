@@ -21,7 +21,9 @@ services:
     depends_on:
       - mongodb
     networks:
-      - tw-network
+      tw-network:
+        aliases:
+            - tw-backend-service
 
   # 3. Frontend: Lighttpd
   frontend:
