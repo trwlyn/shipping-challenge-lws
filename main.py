@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import asyncpg
 import os
 import logging
+import socket
 
 logging.basicConfig(level=logging.INFO)
 
@@ -36,3 +37,10 @@ async def get_user():
     except Exception as e:
         logging.error(f"Error di /user: {e}")
         return {"name": f"Error Koneksi DB: {str(e)}"}
+
+@app.get("/container-id")
+async def get_container_id():
+    try:
+        return {"container_id": socket.gethostname()}
+    except Exception as e:
+        return {"container_id": f"Error: {str(e)}"}
