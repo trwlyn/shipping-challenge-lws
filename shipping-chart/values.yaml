@@ -17,7 +17,7 @@ backend:
   port: 8000
 
 frontend:
-  replicaCount: 1
+  replicaCount: 2
   image: tw-project-lws-frontend
   tag: latest
   port: 80
