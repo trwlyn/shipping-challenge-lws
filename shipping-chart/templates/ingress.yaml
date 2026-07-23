@@ -2,14 +2,24 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: shipping-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
     - host: shipping.test
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          - path: /api/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ .Values.global.initial }}-backend-service
+                port:
+                  number: 8000
+          - path: /?(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ .Values.global.initial }}-frontend-service
